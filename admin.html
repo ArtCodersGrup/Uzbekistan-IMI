@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Maktab-Internati</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --navy: #1b3a6b;
+            --navy-dark: #0f254b;
+            --gold: #c9a84c;
+            --bg: #f4f6f9;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background: var(--bg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Login Form */
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .04);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .login-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--navy);
+        }
+
+        .btn {
+            width: 100%;
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .btn:hover {
+            background: var(--navy-dark);
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Dashboard */
+        .dashboard-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .dash-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--navy);
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .logout-btn:hover {
+            background: var(--border);
+        }
+
+        .dash-main {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 24px;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dash-nav {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            align-self: start;
+        }
+
+        .dash-nav a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: background .2s;
+        }
+
+        .dash-nav a:hover,
+        .dash-nav a.active {
+            background: rgba(27, 58, 107, .05);
+            color: var(--navy);
+        }
+
+        .dash-content {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .dash-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--navy);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dash-title button {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--bg);
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .action-links a {
+            color: var(--navy);
+            text-decoration: underline;
+            margin-right: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .action-links a.del {
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN VIEW -->
+    <div class="login-wrap" id="loginView">
+        <div class="login-box">
+            <h1 class="login-title">Admin Panel</h1>
+            <p class="login-desc">Tizimga kirish uchun ma'lumotlarni kiriting.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="admin@maktab.uz" required>
+                </div>
+                <div class="form-group">
+                    <label>Parol</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Kirish</button>
+                <div class="error-msg" id="errorMsg">Logingiz yoki parolingiz noto'g'ri. Hozircha "admin@maktab.uz" va
+                    "admin" bilan kiring.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboardView" class="hidden">
+        <div class="dashboard-header">
+            <div class="dash-brand">MB Boshqaruv</div>
+            <button class="logout-btn" id="logoutBtn">Chiqish</button>
+        </div>
+
+        <div class="dash-main">
+            <div class="dash-nav">
+                <a href="#" class="active" onclick="showTab('newsTab')">Yangiliklar</a>
+                <a href="#" onclick="showTab('teachersTab')">O'qituvchilar</a>
+                <a href="#" onclick="showTab('settingsTab')">Sozlamalar</a>
+                <a href="index.html" style="margin-top:24px; color:var(--text-muted);">&larr; Saytga qaytish</a>
+            </div>
+
+            <div class="dash-content">
+                <!-- YANGILIKLAR TAB -->
+                <div id="newsTab">
+                    <div class="dash-title">
+                        <span>Barcha Yangiliklar</span>
+                        <button
+                            onclick="alert('Yangi yangilik qo\\\'shish modali bu yerda ochiladi. Supabase ga yuboriladi.')">+
+                            Qo'shish</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sarlavha</th>
+                                <th>Sana</th>
+                                <th>Status</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Navro'z sayli o'tkazildi</td>
+                                <td>21 Mart, 2026</td>
+                                <td>Aktiv</td>
+                                <td class="action-links"><a>Tahrirlash</a><a class="del">O'chirish</a></td>
+                            </tr>
+                            <tr>
+                                <td>Matematika bo'yicha ochiq darslar</td>
+                                <td>15 Fevral, 2026</td>
+                                <td>Aktiv</td>
+                                <td class="action-links"><a>Tahrirlash</a><a class="del">O'chirish</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- OQITUVCHILAR TAB -->
+                <div id="teachersTab" class="hidden">
+                    <div class="dash-title">
+                        <span>O'qituvchilar tarkibi</span>
+                        <button>+ Qo'shish</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ismi-Sharif</th>
+                                <th>Lavozim</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Toshmatov Eshmat</td>
+                                <td>Matematika fani o'qituvchisi</td>
+                                <td class="action-links"><a>Tahrirlash</a><a class="del">O'chirish</a></td>
+                            </tr>
+                            <tr>
+                                <td>Eshmatova Toshmatxon</td>
+                                <td>Informatika fani o'qituvchisi</td>
+                                <td class="action-links"><a>Tahrirlash</a><a class="del">O'chirish</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- SETTINGS TAB -->
+                <div id="settingsTab" class="hidden">
+                    <div class="dash-title">
+                        <span>Supabase Sozlamalari</span>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Tizimni haqiqiy bazaga ulash
+                        uchun ushbu fayl (admin.html) kodining ichidagi JS qismida "SUPABASE_URL" va "SUPABASE_KEY"
+                        qiymatlarini to'ldirishingiz kerak bo'ladi.</p>
+                    <p style="font-size:14px; color:var(--text-dark);">
+                        <code>
+            const SUPABASE_URL = 'SIZNING_URL';<br>
+            const SUPABASE_KEY = 'SIZNING_KEY';
+          </code>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION (Foydalanuvchi to'ldiradi)
+        // ============================================
+        const SUPABASE_URL = 'https://obswrerbtrznxhcvridd.supabase.co'; // User provided URL
+        const SUPABASE_KEY = 'sb_publishable_1UKiU7N6x0AGdeeOybMXHg_6iRYCuiN'; // User provided Key
+        let supabase = null;
+
+        if (SUPABASE_URL && SUPABASE_KEY) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+
+        // ============================================
+        // UI LOGIC
+        // ============================================
+        const loginView = document.getElementById('loginView');
+        const dashboardView = document.getElementById('dashboardView');
+        const errorMsg = document.getElementById('errorMsg');
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        // Dummy login verification
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const eVal = emailInput.value;
+            const pVal = passwordInput.value;
+
+            if (supabase) {
+                // Haqiqiy Supabase Auth logic
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: eVal,
+                    password: pVal
+                });
+                if (error) {
+                    errorMsg.style.display = 'block';
+                } else {
+                    showDashboard();
+                }
+            } else {
+                // Soxta demo Auth (agar Supabase bo'lmasa)
+                if (eVal.includes('@') && pVal === 'admin') {
+                    showDashboard();
+                } else {
+                    errorMsg.style.display = 'block';
+                }
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (supabase) {
+                await supabase.auth.signOut();
+            }
+            dashboardView.classList.add('hidden');
+            loginView.classList.remove('hidden');
+            emailInput.value = '';
+            passwordInput.value = '';
+        });
+
+        function showDashboard() {
+            loginView.classList.add('hidden');
+            dashboardView.classList.remove('hidden');
+        }
+
+        // Tablarni boshqarish
+        function showTab(id) {
+            document.getElementById('newsTab').classList.add('hidden');
+            document.getElementById('teachersTab').classList.add('hidden');
+            document.getElementById('settingsTab').classList.add('hidden');
+
+            document.getElementById(id).classList.remove('hidden');
+
+            document.querySelectorAll('.dash-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
