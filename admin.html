@@ -393,10 +393,10 @@
         // ============================================
         const SUPABASE_URL = 'https://obswrerbtrznxhcvridd.supabase.co'; // User provided URL
         const SUPABASE_KEY = 'sb_publishable_1UKiU7N6x0AGdeeOybMXHg_6iRYCuiN'; // User provided Key
-        let supabase = null;
+        let supabaseClient = null;
 
         if (SUPABASE_URL && SUPABASE_KEY) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         }
 
         // ============================================
@@ -415,13 +415,14 @@
             const eVal = emailInput.value;
             const pVal = passwordInput.value;
 
-            if (supabase) {
+            if (supabaseClient) {
                 // Haqiqiy Supabase Auth logic
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: eVal,
                     password: pVal
                 });
                 if (error) {
+                    errorMsg.innerHTML = "Xato: " + error.message;
                     errorMsg.style.display = 'block';
                 } else {
                     showDashboard();
@@ -437,8 +438,8 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (supabase) {
-                await supabase.auth.signOut();
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut();
             }
             dashboardView.classList.add('hidden');
             loginView.classList.remove('hidden');
