@@ -540,7 +540,12 @@
         // ============================================
         async function loadNews() {
             if (!window.supabaseClient) return;
-            const { data, error } = await supabaseClient.from('news').select('*').order('id', { ascending: false });
+            let result = await supabaseClient.from('news').select('*').order('id', { ascending: false });
+            if (result.error && result.error.message.includes('future')) {
+                await new Promise(r => setTimeout(r, 1500));
+                result = await supabaseClient.from('news').select('*').order('id', { ascending: false });
+            }
+            const { data, error } = result;
             const tbody = document.getElementById('newsTbody');
             tbody.innerHTML = '';
             if (error || !data) {
@@ -647,7 +652,12 @@
         // ============================================
         async function loadTeachers() {
             if (!window.supabaseClient) return;
-            const { data, error } = await supabaseClient.from('teachers').select('*').order('id', { ascending: true });
+            let result = await supabaseClient.from('teachers').select('*').order('id', { ascending: true });
+            if (result.error && result.error.message.includes('future')) {
+                await new Promise(r => setTimeout(r, 1500));
+                result = await supabaseClient.from('teachers').select('*').order('id', { ascending: true });
+            }
+            const { data, error } = result;
             const tbody = document.getElementById('teachersTbody');
             tbody.innerHTML = '';
 
