@@ -1209,7 +1209,7 @@
         return;
       }
 
-      const { data, error } = await supabase.from('news').select('*').eq('id', id).single();
+      const { data, error } = await supabaseClient.from('news').select('*').eq('id', id).single();
 
       if (error || !data) {
         container.innerHTML = '<div style="padding:40px; text-align:center;">Yangilik topilmadi.</div>';

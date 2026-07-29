@@ -1211,7 +1211,7 @@
     async function loadNewsFront() {
       if (!window.supabase) return;
       const list = document.getElementById('newsList');
-      const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+      const { data, error } = await supabaseClient.from('news').select('*').order('created_at', { ascending: false });
 
       if (error || !data) {
         list.innerHTML = `<div style="text-align:center; color: red; grid-column: 1 / -1;">Ma'lumotni yuklashda xatolik yuz berdi.</div>`;

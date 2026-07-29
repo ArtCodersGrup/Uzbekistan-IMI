@@ -471,7 +471,7 @@
 
             // Demo auth as a fallback if REAL admin login doesn't exist
             if (window.supabase) {
-                const { data, error } = await supabase.auth.signInWithPassword({ email: eVal, password: pVal });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email: eVal, password: pVal });
                 if (error) {
                     // Fallback to fake login if Supabase auth fails (user not configured yet)
                     if (eVal.includes('@') && pVal === 'admin') {
@@ -493,7 +493,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (window.supabase) await supabase.auth.signOut();
+            if (window.supabase) await supabaseClient.auth.signOut();
             document.getElementById('dashboardView').classList.add('hidden');
             document.getElementById('loginView').classList.remove('hidden');
         });
@@ -519,7 +519,7 @@
         // ============================================
         async function loadNews() {
             if (!window.supabase) return;
-            const { data, error } = await supabase.from('news').select('*').order('id', { ascending: false });
+            const { data, error } = await supabaseClient.from('news').select('*').order('id', { ascending: false });
             const tbody = document.getElementById('newsTbody');
             tbody.innerHTML = '';
             if (error || !data) {
@@ -554,7 +554,7 @@
         }
 
         async function editNews(id) {
-            const { data } = await supabase.from('news').select('*').eq('id', id).single();
+            const { data } = await supabaseClient.from('news').select('*').eq('id', id).single();
             if (data) {
                 document.getElementById('newsId').value = data.id;
                 document.getElementById('newsTitle').value = data.title;
@@ -574,9 +574,9 @@
                 image_url: document.getElementById('newsImage').value
             };
             if (id) {
-                await supabase.from('news').update(payload).eq('id', id);
+                await supabaseClient.from('news').update(payload).eq('id', id);
             } else {
-                await supabase.from('news').insert([payload]);
+                await supabaseClient.from('news').insert([payload]);
             }
             closeModal('newsModal');
             loadNews();
@@ -584,7 +584,7 @@
 
         async function deleteNews(id) {
             if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-                await supabase.from('news').delete().eq('id', id);
+                await supabaseClient.from('news').delete().eq('id', id);
                 loadNews();
             }
         }
@@ -594,7 +594,7 @@
         // ============================================
         async function loadTeachers() {
             if (!window.supabase) return;
-            const { data, error } = await supabase.from('teachers').select('*').order('id', { ascending: true });
+            const { data, error } = await supabaseClient.from('teachers').select('*').order('id', { ascending: true });
             const tbody = document.getElementById('teachersTbody');
             tbody.innerHTML = '';
             if (error || !data) return (tbody.innerHTML = '<tr><td colspan="3">Xato</td></tr>');
@@ -622,7 +622,7 @@
         }
 
         async function editTeacher(id) {
-            const { data } = await supabase.from('teachers').select('*').eq('id', id).single();
+            const { data } = await supabaseClient.from('teachers').select('*').eq('id', id).single();
             if (data) {
                 document.getElementById('teacherId').value = data.id;
                 document.getElementById('tName').value = data.full_name;
@@ -644,9 +644,9 @@
                 image_url: document.getElementById('tImage').value
             };
             if (id) {
-                await supabase.from('teachers').update(payload).eq('id', id);
+                await supabaseClient.from('teachers').update(payload).eq('id', id);
             } else {
-                await supabase.from('teachers').insert([payload]);
+                await supabaseClient.from('teachers').insert([payload]);
             }
             closeModal('teacherModal');
             loadTeachers();
@@ -654,7 +654,7 @@
 
         async function deleteTeacher(id) {
             if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-                await supabase.from('teachers').delete().eq('id', id);
+                await supabaseClient.from('teachers').delete().eq('id', id);
                 loadTeachers();
             }
         }

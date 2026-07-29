@@ -1218,7 +1218,7 @@
     async function loadTeachersFront() {
       if (!window.supabase) return;
       const list = document.getElementById('teachersList');
-      const { data, error } = await supabase.from('teachers').select('*').order('id', { ascending: true });
+      const { data, error } = await supabaseClient.from('teachers').select('*').order('id', { ascending: true });
 
       if (error || !data) {
         list.innerHTML = `<div style="text-align:center; color: red;">Ma'lumotni yuklashda xatolik yuz berdi.</div>`;
