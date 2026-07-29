@@ -1,409 +1,1274 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>O'zbekiston Tuman Ixtisoslashtirilgan Maktab-Internati</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --navy:#1b3a6b;
-  --navy-dark:#0f254b;
-  --gold:#c9a84c;
-  --gold-light:#dfce87;
-  --bg:#f4f6f9;
-  --border:#e2e8f0;
-  --text-dark:#1e293b;
-  --text-muted:#64748b;
-  --text-light:#e2e8f0;
-  --white:#ffffff;
-  --radius:12px;
-}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;color:var(--text-dark);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
-img{display:block;max-width:100%}
-a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer}
-svg{display:block}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O'zbekiston Tuman Ixtisoslashtirilgan Maktab-Internati</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-/* HEADER */
-#header{position:sticky;top:0;left:0;right:0;z-index:1000;background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 4px 6px rgba(0,0,0,.02)}
-.header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:15px 24px;gap:16px}
-.logo-wrap{display:flex;align-items:center;gap:16px}
-.logo-wrap img{width:56px;height:56px;object-fit:contain;border-radius:8px;flex-shrink:0}
-.logo-text{display:flex;flex-direction:column;gap:2px}
-.logo-text .main-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--navy);line-height:1.3;letter-spacing:.2px}
-.logo-text .sub-name{font-size:10.5px;font-weight:500;color:var(--text-muted);letter-spacing:.3px}
-nav{display:flex;align-items:center;gap:26px}
-nav a{font-size:14px;font-weight:500;color:var(--text-muted);transition:color .2s;white-space:nowrap}
-nav a:hover,nav a.active{color:var(--navy)}
-.hamburger{display:none;flex-direction:column;gap:5px;border:none;background:none;padding:8px}
-.hamburger span{display:block;width:22px;height:2px;background:var(--navy);border-radius:2px}
-.mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;background:var(--white);z-index:999;padding:8px 0;border-top:1px solid var(--border);box-shadow:0 8px 16px rgba(0,0,0,.06)}
-.mobile-nav a{display:block;color:var(--text-dark);padding:14px 24px;font-size:15px;border-bottom:1px solid var(--border)}
-.mobile-nav.open{display:block}
+    :root {
+      --navy: #1b3a6b;
+      --navy-dark: #0f254b;
+      --gold: #c9a84c;
+      --gold-light: #dfce87;
+      --bg: #f4f6f9;
+      --border: #e2e8f0;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #e2e8f0;
+      --white: #ffffff;
+      --radius: 12px;
+    }
 
-/* HERO */
-#hero{position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:110px 24px 60px}
-.hero-slides{position:absolute;inset:0}
-.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease;background-size:cover;background-position:center}
-.hero-slide.active{opacity:1}
-.hero-overlay{position:absolute;inset:0;background:rgba(15,37,75,.65)}
-.hero-content{position:relative;z-index:2;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
-.hero-badge{background:rgba(201,168,76,.13);border:1px solid var(--gold);color:var(--gold-light);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:8px 18px;border-radius:100px}
-.hero-content h1{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(28px,5vw,56px);line-height:1.15;color:var(--white)}
-.hero-quote{font-family:'Inter',sans-serif;font-style:italic;font-size:clamp(16px,2.2vw,24px);color:var(--gold-light)}
-.hero-since{font-size:clamp(13px,1.6vw,16px);font-weight:500;color:var(--text-light)}
-.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;animation:bob 2s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+    html {
+      scroll-behavior: smooth
+    }
 
-/* SECTION BASE */
-.section{padding:96px 24px}
-.section-inner{max-width:1280px;margin:0 auto}
-.section-head{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;margin-bottom:48px}
-.section-label{font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gold)}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);font-weight:700;color:var(--navy)}
-.section-desc{font-size:16px;color:var(--text-muted);max-width:720px;line-height:1.6}
-#boglanish .section-label{color:var(--gold-light)}
-#boglanish .section-title{color:var(--white)}
-#boglanish .section-desc{color:var(--text-light)}
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased
+    }
 
-/* STATISTIKA */
-#statistika{background:var(--bg)}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.stat-card{background:var(--white);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 12px 12px rgba(27,58,107,.04)}
-.stat-num{font-family:'Playfair Display',serif;font-weight:800;font-size:48px;color:var(--navy)}
-.stat-bar{width:48px;height:3px;border-radius:2px;background:var(--gold)}
-.stat-label{font-size:16px;font-weight:500;color:var(--text-muted);text-align:center}
+    img {
+      display: block;
+      max-width: 100%
+    }
 
-/* NATIJALAR */
-#natijalar{background:var(--white)}
-.results-table-wrap{max-width:1000px;margin:0 auto;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:0 8px 24px rgba(27,58,107,.02)}
-.results-table{width:100%;border-collapse:collapse}
-.results-table thead tr{background:var(--navy)}
-.results-table th{color:var(--white);font-size:14px;font-weight:600;text-align:left;padding:0 32px;height:56px}
-.results-table th:last-child{text-align:right}
-.results-table td{padding:0 32px;height:56px;font-size:15px}
-.results-table tbody tr{background:var(--white);border-bottom:1px solid var(--border)}
-.results-table tbody tr:nth-child(even){background:var(--bg)}
-.results-table tbody tr:last-child{border-bottom:none}
-.td-year{font-weight:600;color:var(--text-dark);width:240px}
-.td-count{color:var(--text-muted);width:200px}
-.td-percent{font-weight:700;color:var(--gold);width:200px}
-.td-ball{font-weight:600;color:var(--navy);text-align:right}
-.results-cards{display:none;flex-direction:column;gap:16px}
-.result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:0 4px 12px rgba(27,58,107,.03)}
-.result-card-top{display:flex;align-items:center;justify-content:space-between}
-.result-card-year{font-weight:600;font-size:15px;color:var(--text-dark)}
-.result-card-badge{background:rgba(201,168,76,.13);color:var(--gold);font-weight:700;font-size:13px;padding:4px 12px;border-radius:20px}
-.result-card-divider{height:1px;background:var(--border);margin:16px 0}
-.result-card-bottom{display:flex;justify-content:space-between}
-.result-card-item span{display:block}
-.result-card-item .label{font-size:12px;color:var(--text-muted);margin-bottom:4px}
-.result-card-item .value{font-weight:700;font-size:15px;color:var(--navy)}
-.result-card-item:last-child{text-align:right}
+    a {
+      text-decoration: none;
+      color: inherit
+    }
 
-/* RAHBARIYAT */
-#rahbariyat{background:var(--white)}
-.leader-list{max-width:1000px;margin:0 auto;display:flex;flex-direction:column}
-.leader-row{display:flex;align-items:center;gap:64px;padding:24px 0}
-.leader-row.reverse{flex-direction:row-reverse}
-.leader-divider{height:1px;background:var(--border)}
-.leader-photo{width:360px;aspect-ratio:9/8;flex-shrink:0;border-radius:16px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.leader-photo img{width:100%;height:100%;object-fit:cover;object-position:center 8%}
-.leader-info{display:flex;flex-direction:column;gap:16px}
-.leader-name{font-family:'Playfair Display',serif;font-weight:700;font-size:28px;color:var(--navy);line-height:1.25}
-.leader-role{font-size:14px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--gold)}
-.leader-desc{font-size:16px;color:var(--text-muted);line-height:1.6}
+    button {
+      font-family: inherit;
+      cursor: pointer
+    }
 
-/* FIKRLAR */
-#fikrlar{background:var(--white)}
-.testi-wrap{display:flex;align-items:center;gap:24px}
-.testi-arrow{width:48px;height:48px;flex-shrink:0;border-radius:24px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 4px rgba(0,0,0,.02);transition:.2s;color:var(--navy)}
-.testi-arrow:hover{background:var(--navy);color:var(--white);border-color:var(--navy)}
-.testi-viewport{flex:1;overflow:hidden}
-.testi-track{display:flex;gap:24px;transition:transform .45s cubic-bezier(.25,.46,.45,.94)}
-.testi-card{flex:0 0 calc(33.333% - 16px);background:var(--white);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:24px;box-shadow:0 8px 8px rgba(27,58,107,.02);border:1px solid var(--border)}
-.testi-quote-icon{color:var(--gold)}
-.testi-text{font-style:italic;font-size:15px;color:var(--text-dark);line-height:1.6}
-.testi-name{font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--navy)}
-.testi-role{font-size:13px;font-weight:500;color:var(--text-muted);margin-top:4px}
-.testi-dots{display:none;justify-content:center;gap:8px;margin-top:24px}
-.testi-dot{width:7px;height:7px;border-radius:50%;background:var(--border);border:none;padding:0}
-.testi-dot.active{background:var(--gold)}
+    svg {
+      display: block
+    }
 
-/* BOG'LANISH */
-#boglanish{background:var(--navy)}
-.contact-wrap{display:flex;gap:64px;align-items:center;max-width:1280px}
-.contact-list{flex:1;display:flex;flex-direction:column;gap:32px}
-.contact-row{display:flex;align-items:center;gap:20px}
-.contact-icon{width:56px;height:56px;flex-shrink:0;border-radius:28px;background:rgba(255,255,255,.1);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold-light)}
-.contact-text .contact-label{font-size:14px;font-weight:500;color:var(--text-light)}
-.contact-text .contact-value{font-family:'Playfair Display',serif;font-weight:700;font-size:20px;color:var(--white);margin-top:4px}
-.map-box{width:600px;height:400px;flex-shrink:0;border-radius:16px;overflow:hidden;position:relative;border:1px solid var(--border);background:var(--navy-dark)}
-.map-box iframe{width:100%;height:100%;border:0;filter:grayscale(.15) saturate(1.1)}
-.map-pill{position:absolute;top:19px;left:19px;background:var(--white);display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;box-shadow:0 4px 4px rgba(0,0,0,.08);font-size:14px;font-weight:600;color:var(--text-dark);z-index:2}
-.map-pill svg{color:var(--gold)}
+    /* HEADER */
+    #header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, .02)
+    }
 
-/* FAQ */
-#faq{background:var(--bg)}
-.faq-list{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.faq-item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color .2s}
-.faq-item.open{border-color:var(--gold)}
-.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:none;border:none;text-align:left}
-.faq-q span:first-child{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--navy)}
-.faq-icon{width:24px;height:24px;flex-shrink:0;color:var(--navy);display:flex;align-items:center;justify-content:center}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
-.faq-a p{font-size:15px;color:var(--text-muted);line-height:1.6;padding-top:16px}
-.faq-item.open .faq-a{max-height:200px}
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 24px;
+      gap: 16px
+    }
 
-/* FOOTER */
-footer{background:var(--navy-dark);padding:80px 24px 40px}
-.footer-inner{max-width:1280px;margin:0 auto}
-.footer-top{display:flex;gap:48px;margin-bottom:64px}
-.footer-brand{width:480px;flex-shrink:0;display:flex;flex-direction:column;gap:24px}
-.footer-logo-row{display:flex;align-items:center;gap:16px}
-.footer-logo-row img{width:48px;height:48px;object-fit:contain;border-radius:8px}
-.footer-logo-row span{font-family:'Playfair Display',serif;font-weight:700;font-size:20px;color:var(--white)}
-.footer-brand p{font-size:14px;color:var(--text-light);line-height:1.6}
-.footer-col{flex:1}
-.footer-col h4{font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--gold);margin-bottom:24px;letter-spacing:.5px}
-.footer-col a,.footer-col p{display:block;font-size:14px;color:var(--text-light);margin-bottom:12px}
-.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;text-align:center}
-.footer-copy{font-size:13px;color:var(--text-light);opacity:.7;max-width:700px}
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px
+    }
+
+    .logo-wrap img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      border-radius: 8px;
+      flex-shrink: 0
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px
+    }
+
+    .logo-text .main-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.3;
+      letter-spacing: .2px
+    }
+
+    .logo-text .sub-name {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: .3px
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 26px
+    }
+
+    nav a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color .2s;
+      white-space: nowrap
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--navy)
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      border: none;
+      background: none;
+      padding: 8px
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+      border-radius: 2px
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      z-index: 999;
+      padding: 8px 0;
+      border-top: 1px solid var(--border);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, .06)
+    }
+
+    .mobile-nav a {
+      display: block;
+      color: var(--text-dark);
+      padding: 14px 24px;
+      font-size: 15px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .mobile-nav.open {
+      display: block
+    }
+
+    /* HERO */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 110px 24px 60px
+    }
+
+    .hero-slides {
+      position: absolute;
+      inset: 0
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+      background-size: cover;
+      background-position: center
+    }
+
+    .hero-slide.active {
+      opacity: 1
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 37, 75, .65)
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      text-align: center
+    }
+
+    .hero-badge {
+      background: rgba(201, 168, 76, .13);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 100px
+    }
+
+    .hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(28px, 5vw, 56px);
+      line-height: 1.15;
+      color: var(--white)
+    }
+
+    .hero-quote {
+      font-family: 'Inter', sans-serif;
+      font-style: italic;
+      font-size: clamp(16px, 2.2vw, 24px);
+      color: var(--gold-light)
+    }
+
+    .hero-since {
+      font-size: clamp(13px, 1.6vw, 16px);
+      font-weight: 500;
+      color: var(--text-light)
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      animation: bob 2s ease-in-out infinite
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translate(-50%, 0)
+      }
+
+      50% {
+        transform: translate(-50%, 8px)
+      }
+    }
+
+    /* SECTION BASE */
+    .section {
+      padding: 96px 24px
+    }
+
+    .section-inner {
+      max-width: 1280px;
+      margin: 0 auto
+    }
+
+    .section-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+      margin-bottom: 48px
+    }
+
+    .section-label {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 720px;
+      line-height: 1.6
+    }
+
+    #boglanish .section-label {
+      color: var(--gold-light)
+    }
+
+    #boglanish .section-title {
+      color: var(--white)
+    }
+
+    #boglanish .section-desc {
+      color: var(--text-light)
+    }
+
+    /* STATISTIKA */
+    #statistika {
+      background: var(--bg)
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 12px 12px rgba(27, 58, 107, .04)
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 48px;
+      color: var(--navy)
+    }
+
+    .stat-bar {
+      width: 48px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--gold)
+    }
+
+    .stat-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center
+    }
+
+    /* NATIJALAR */
+    #natijalar {
+      background: var(--white)
+    }
+
+    .results-table-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(27, 58, 107, .02)
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .results-table thead tr {
+      background: var(--navy)
+    }
+
+    .results-table th {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      padding: 0 32px;
+      height: 56px
+    }
+
+    .results-table th:last-child {
+      text-align: right
+    }
+
+    .results-table td {
+      padding: 0 32px;
+      height: 56px;
+      font-size: 15px
+    }
+
+    .results-table tbody tr {
+      background: var(--white);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .results-table tbody tr:nth-child(even) {
+      background: var(--bg)
+    }
+
+    .results-table tbody tr:last-child {
+      border-bottom: none
+    }
+
+    .td-year {
+      font-weight: 600;
+      color: var(--text-dark);
+      width: 240px
+    }
+
+    .td-count {
+      color: var(--text-muted);
+      width: 200px
+    }
+
+    .td-percent {
+      font-weight: 700;
+      color: var(--gold);
+      width: 200px
+    }
+
+    .td-ball {
+      font-weight: 600;
+      color: var(--navy);
+      text-align: right
+    }
+
+    .results-cards {
+      display: none;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .result-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(27, 58, 107, .03)
+    }
+
+    .result-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .result-card-year {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-dark)
+    }
+
+    .result-card-badge {
+      background: rgba(201, 168, 76, .13);
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 20px
+    }
+
+    .result-card-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0
+    }
+
+    .result-card-bottom {
+      display: flex;
+      justify-content: space-between
+    }
+
+    .result-card-item span {
+      display: block
+    }
+
+    .result-card-item .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px
+    }
+
+    .result-card-item .value {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--navy)
+    }
+
+    .result-card-item:last-child {
+      text-align: right
+    }
+
+    /* RAHBARIYAT */
+    #rahbariyat {
+      background: var(--white)
+    }
+
+    .leader-list {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column
+    }
+
+    .leader-row {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      padding: 24px 0
+    }
+
+    .leader-row.reverse {
+      flex-direction: row-reverse
+    }
+
+    .leader-divider {
+      height: 1px;
+      background: var(--border)
+    }
+
+    .leader-photo {
+      width: 360px;
+      aspect-ratio: 9/8;
+      flex-shrink: 0;
+      border-radius: 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden
+    }
+
+    .leader-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 8%
+    }
+
+    .leader-info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .leader-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--navy);
+      line-height: 1.25
+    }
+
+    .leader-role {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    .leader-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6
+    }
+
+    /* FIKRLAR */
+    #fikrlar {
+      background: var(--white)
+    }
+
+    .testi-wrap {
+      display: flex;
+      align-items: center;
+      gap: 24px
+    }
+
+    .testi-arrow {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      border-radius: 24px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, .02);
+      transition: .2s;
+      color: var(--navy)
+    }
+
+    .testi-arrow:hover {
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy)
+    }
+
+    .testi-viewport {
+      flex: 1;
+      overflow: hidden
+    }
+
+    .testi-track {
+      display: flex;
+      gap: 24px;
+      transition: transform .45s cubic-bezier(.25, .46, .45, .94)
+    }
+
+    .testi-card {
+      flex: 0 0 calc(33.333% - 16px);
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 0 8px 8px rgba(27, 58, 107, .02);
+      border: 1px solid var(--border)
+    }
+
+    .testi-quote-icon {
+      color: var(--gold)
+    }
+
+    .testi-text {
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-dark);
+      line-height: 1.6
+    }
+
+    .testi-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--navy)
+    }
+
+    .testi-role {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 4px
+    }
+
+    .testi-dots {
+      display: none;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px
+    }
+
+    .testi-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      padding: 0
+    }
+
+    .testi-dot.active {
+      background: var(--gold)
+    }
+
+    /* BOG'LANISH */
+    #boglanish {
+      background: var(--navy)
+    }
+
+    .contact-wrap {
+      display: flex;
+      gap: 64px;
+      align-items: center;
+      max-width: 1280px
+    }
+
+    .contact-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 32px
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 20px
+    }
+
+    .contact-icon {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-light)
+    }
+
+    .contact-text .contact-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-light)
+    }
+
+    .contact-text .contact-value {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--white);
+      margin-top: 4px
+    }
+
+    .map-box {
+      width: 600px;
+      height: 400px;
+      flex-shrink: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--navy-dark)
+    }
+
+    .map-box iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      filter: grayscale(.15) saturate(1.1)
+    }
+
+    .map-pill {
+      position: absolute;
+      top: 19px;
+      left: 19px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, .08);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      z-index: 2
+    }
+
+    .map-pill svg {
+      color: var(--gold)
+    }
+
+    /* FAQ */
+    #faq {
+      background: var(--bg)
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .faq-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color .2s
+    }
+
+    .faq-item.open {
+      border-color: var(--gold)
+    }
+
+    .faq-q {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: none;
+      border: none;
+      text-align: left
+    }
+
+    .faq-q span:first-child {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--navy)
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease
+    }
+
+    .faq-a p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding-top: 16px
+    }
+
+    .faq-item.open .faq-a {
+      max-height: 200px
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy-dark);
+      padding: 80px 24px 40px
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto
+    }
+
+    .footer-top {
+      display: flex;
+      gap: 48px;
+      margin-bottom: 64px
+    }
+
+    .footer-brand {
+      width: 480px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px
+    }
+
+    .footer-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 16px
+    }
+
+    .footer-logo-row img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px
+    }
+
+    .footer-logo-row span {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--white)
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.6
+    }
+
+    .footer-col {
+      flex: 1
+    }
+
+    .footer-col h4 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--gold);
+      margin-bottom: 24px;
+      letter-spacing: .5px
+    }
+
+    .footer-col a,
+    .footer-col p {
+      display: block;
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 12px
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-light);
+      opacity: .7;
+      max-width: 700px
+    }
 
 
-/* MOBILE */
-@media(max-width:900px){
-  nav{display:none}
-  .hamburger{display:flex}
-  .logo-text .main-name{font-size:12px}
-  .logo-text .sub-name{font-size:9px}
-  .logo-wrap img{width:44px;height:44px}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .results-table-wrap{display:none}
-  .results-cards{display:flex}
-  .leader-row,.leader-row.reverse{flex-direction:column;gap:24px;align-items:stretch}
-  .leader-photo{width:100%;aspect-ratio:9/8}
-  .testi-arrow{display:none}
-  .testi-card{flex:0 0 100%}
-  .testi-dots{display:flex}
-  .contact-wrap{flex-direction:column}
-  .map-box{width:100%}
-  .footer-top{flex-direction:column;gap:40px}
-  .footer-brand{width:100%}
-}
-@media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr 1fr;gap:12px}
-  .stat-card{padding:20px}
-  .stat-num{font-size:36px}
-  .section{padding:64px 20px}
+    /* MOBILE */
+    @media(max-width:900px) {
+      nav {
+        display: none
+      }
 
-}
-</style>
+      .hamburger {
+        display: flex
+      }
+
+      .logo-text .main-name {
+        font-size: 12px
+      }
+
+      .logo-text .sub-name {
+        font-size: 9px
+      }
+
+      .logo-wrap img {
+        width: 44px;
+        height: 44px
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .results-table-wrap {
+        display: none
+      }
+
+      .results-cards {
+        display: flex
+      }
+
+      .leader-row,
+      .leader-row.reverse {
+        flex-direction: column;
+        gap: 24px;
+        align-items: stretch
+      }
+
+      .leader-photo {
+        width: 100%;
+        aspect-ratio: 9/8
+      }
+
+      .testi-arrow {
+        display: none
+      }
+
+      .testi-card {
+        flex: 0 0 100%
+      }
+
+      .testi-dots {
+        display: flex
+      }
+
+      .contact-wrap {
+        flex-direction: column
+      }
+
+      .map-box {
+        width: 100%
+      }
+
+      .footer-top {
+        flex-direction: column;
+        gap: 40px
+      }
+
+      .footer-brand {
+        width: 100%
+      }
+    }
+
+    @media(max-width:480px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px
+      }
+
+      .stat-card {
+        padding: 20px
+      }
+
+      .stat-num {
+        font-size: 36px
+      }
+
+      .section {
+        padding: 64px 20px
+      }
+
+    }
+  </style>
 </head>
+
 <body>
 
-<header id="header">
-  <div class="header-inner">
-    <a href="#hero" class="logo-wrap">
-      <img src="img/logo.png" alt="Logo">
-      <div class="logo-text">
-        <span class="main-name">O'ZBEKISTON TUMAN</span>
-        <span class="sub-name">IXTISOSLASHTIRILGAN MAKTAB-INTERNATI</span>
-      </div>
-    </a>
-    <nav>
-      <a href="index.html" class="active">Bosh sahifa</a>
-      <a href="news.html">Yangiliklar</a>
-      <a href="teachers.html">O'qituvchilar</a>
-    </nav>
-    <button class="hamburger" id="menuBtn" aria-label="Menyu">
-      <span></span><span></span><span></span>
-    </button>
+  <header id="header">
+    <div class="header-inner">
+      <a href="#hero" class="logo-wrap">
+        <img src="img/logo.png" alt="Logo">
+        <div class="logo-text">
+          <span class="main-name">O'ZBEKISTON TUMAN</span>
+          <span class="sub-name">IXTISOSLASHTIRILGAN MAKTAB-INTERNATI</span>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html" class="active">Bosh sahifa</a>
+        <a href="news.html">Yangiliklar</a>
+        <a href="teachers.html">O'qituvchilar</a>
+      </nav>
+      <button class="hamburger" id="menuBtn" aria-label="Menyu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Bosh sahifa</a>
+    <a href="news.html">Yangiliklar</a>
+    <a href="teachers.html">O'qituvchilar</a>
   </div>
-</header>
-<div class="mobile-nav" id="mobileNav">
-  <a href="index.html">Bosh sahifa</a>
-  <a href="news.html">Yangiliklar</a>
-  <a href="teachers.html">O'qituvchilar</a>
-</div>
 
 
-<section id="teacher-detail" class="section" style="min-height: 70vh; padding-top: 120px;">
-  <div class="section-inner" style="max-width: 900px; margin: 0 auto;">
-    <a href="teachers.html" style="display: inline-block; margin-bottom: 24px; color: var(--text-muted); font-weight: 500;">&larr; Barcha o'qituvcilarga qaytish</a>
-    
-    <div style="display: flex; gap: 40px; margin-bottom: 48px; flex-wrap: wrap;">
-      <!-- Rasm -->
-      <div style="width: 280px; height: 320px; border-radius: 16px; overflow: hidden; flex-shrink: 0; box-shadow: 0 12px 24px rgba(0,0,0,0.06);">
-        <img src="img/direktor.jpg" alt="Toshmatov Eshmat" style="width: 100%; height: 100%; object-fit: cover;">
+  <section id="teacher-detail" class="section" style="min-height: 70vh; padding-top: 120px;">
+    <div class="section-inner" style="max-width: 900px; margin: 0 auto;">
+      <a href="teachers.html"
+        style="display: inline-block; margin-bottom: 24px; color: var(--text-muted); font-weight: 500;">&larr; Barcha
+        o'qituvcilarga qaytish</a>
+
+      <div id="teacherDetailContainer" style="display: flex; gap: 40px; margin-bottom: 48px; flex-wrap: wrap;">
+        <div style="padding: 40px; color: var(--text-muted); width: 100%; text-align: center;">Yuklanmoqda...</div>
       </div>
-      
-      <!-- Asosiy Info -->
+
+      <!-- Sertifikatlar Bloki -->
+      <div style="border-top: 1px solid var(--border); padding-top: 40px;">
+        <h3 style="font-size: 24px; color: var(--navy); font-family: 'Playfair Display', serif; margin-bottom: 24px;">
+          Sertifikatlar va Yutuqlar</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px;">
+          <!-- Sertifikat 1 -->
+          <div
+            style="border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--white); text-align: center;">
+            <div
+              style="width: 100%; height: 180px; background: var(--bg); border-radius: 8px; margin-bottom: 12px; display: flex; align-items:center; justify-content:center;">
+              <span style="color:var(--text-muted); font-size:14px;">Sertifikat Rasmi (Namuna)</span>
+            </div>
+            <span style="font-weight: 600; font-size: 14px; color: var(--navy);">Xalq Ta'limi a'lochisi</span>
+          </div>
+
+          <!-- Sertifikat 2 -->
+          <div
+            style="border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--white); text-align: center;">
+            <div
+              style="width: 100%; height: 180px; background: var(--bg); border-radius: 8px; margin-bottom: 12px; display: flex; align-items:center; justify-content:center;">
+              <span style="color:var(--text-muted); font-size:14px;">Sertifikat Rasmi (Namuna)</span>
+            </div>
+            <span style="font-weight: 600; font-size: 14px; color: var(--navy);">Xalqaro TOFEL Level</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo-row">
+            <img src="img/logo.png" alt="Logo">
+            <span>Maktab-internati</span>
+          </div>
+          <p>Maktabgacha va maktab ta'lim vazirligi tasarrufidagi ixtisoslashtirilgan ta'lim muassasalari agentligi
+            O'zbekiston tuman ixtisoslashtirilgan maktab-internati</p>
+        </div>
+        <div class="footer-col">
+          <h4>MUASSASA</h4>
+          <a href="index.html">Bosh sahifa</a>
+          <a href="news.html">Yangiliklar</a>
+          <a href="teachers.html">O'qituvchilar</a>
+        </div>
+        <div class="footer-col">
+          <h4>ALOQA</h4>
+          <p>Telefon: +998 90 123-45-67</p>
+          <p>Telegram: @maktab_internat</p>
+          <p>Instagram: @maktab_internat</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2023-2026 O'zbekiston tuman ixtisoslashtirilgan maktab-internati. Barcha huquqlar
+          himoyalangan.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.hero-slide');
+    let cur = 0;
+    setInterval(() => {
+      slides[cur].classList.remove('active');
+      cur = (cur + 1) % slides.length;
+      slides[cur].classList.add('active');
+    }, 5000);
+
+    function animateCounter(el, target) {
+      const dur = 1600, step = 16;
+      const inc = target / (dur / step);
+      let val = 0;
+      const t = setInterval(() => {
+        val = Math.min(val + inc, target);
+        el.textContent = Math.floor(val) + (val >= target ? '+' : '');
+        if (val >= target) { el.textContent = target + (target === 3 ? '' : '+'); clearInterval(t); }
+      }, step);
+    }
+    const statSection = document.getElementById('statistika');
+    let counted = false;
+    new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !counted) {
+        counted = true;
+        document.querySelectorAll('.stat-num').forEach(el => animateCounter(el, +el.dataset.target));
+      }
+    }, { threshold: .3 }).observe(statSection);
+
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.querySelector('.faq-q').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          item.querySelector('.faq-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>';
+        }
+      });
+    });
+
+    const track = document.getElementById('testiTrack');
+    const dotsWrap = document.getElementById('testiDots');
+    const cards = track.children.length;
+    let tIdx = 0;
+
+    function perView() { return window.innerWidth <= 900 ? 1 : 3; }
+    function maxIdx() { return Math.max(0, cards - perView()); }
+
+    function buildDots() {
+      dotsWrap.innerHTML = '';
+      for (let i = 0; i <= maxIdx(); i++) {
+        const d = document.createElement('button');
+        d.className = 'testi-dot' + (i === tIdx ? ' active' : '');
+        d.addEventListener('click', () => moveTo(i));
+        dotsWrap.appendChild(d);
+      }
+    }
+    function moveTo(n) {
+      tIdx = Math.max(0, Math.min(n, maxIdx()));
+      const cardEl = track.children[0];
+      const gap = 24;
+      const cardW = cardEl.getBoundingClientRect().width + gap;
+      track.style.transform = 'translateX(-' + (tIdx * cardW) + 'px)';
+      document.querySelectorAll('.testi-dot').forEach((d, i) => d.classList.toggle('active', i === tIdx));
+    }
+    document.getElementById('tNext').addEventListener('click', () => moveTo(tIdx + 1));
+    document.getElementById('tPrev').addEventListener('click', () => moveTo(tIdx - 1));
+    window.addEventListener('resize', () => { buildDots(); moveTo(0); });
+    buildDots();
+    moveTo(0);
+
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
+
+    const currentUrl = window.location.pathname;
+    document.querySelectorAll('nav a, .mobile-nav a').forEach(a => {
+      const isMatch = currentUrl.endsWith(a.getAttribute('href')) || (currentUrl.endsWith('/') && a.getAttribute('href') === 'index.html');
+      a.classList.toggle('active', isMatch);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script>
+    async function loadTeacherDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const container = document.getElementById('teacherDetailContainer');
+      if (!id || !window.supabase) {
+        container.innerHTML = '<div style="padding:40px; text-align:center;">Ustoz topilmadi.</div>';
+        return;
+      }
+      const { data, error } = await supabase.from('teachers').select('*').eq('id', id).single();
+      if (error || !data) {
+        container.innerHTML = '<div style="padding:40px; text-align:center;">Ustoz topilmadi.</div>';
+        return;
+      }
+      const imgUrl = data.image_url || 'img/direktor.jpg';
+      container.innerHTML = `
+      <div style="width: 280px; height: 320px; border-radius: 16px; overflow: hidden; flex-shrink: 0; box-shadow: 0 12px 24px rgba(0,0,0,0.06);">
+        <img src="\${imgUrl}" alt="\${data.full_name}" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
       <div style="flex: 1; min-width: 300px;">
-        <h1 style="font-size: 32px; color: var(--navy); font-family: 'Playfair Display', serif; margin-bottom: 8px;">Toshmatov Eshmat</h1>
-        <div style="font-size: 16px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px;">Matematika fani o'qituvchisi</div>
-        
-        <!-- Kontaktlar / Ijtimoiy -->
+        <h1 style="font-size: 32px; color: var(--navy); font-family: 'Playfair Display', serif; margin-bottom: 8px;">\${data.full_name}</h1>
+        <div style="font-size: 16px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px;">\${data.role}</div>
         <div style="display: flex; gap: 16px; margin-bottom: 24px;">
-          <!-- Telefon (Conditionally displayed, demo data) -->
           <a href="tel:+998901234567" style="display: flex; align-items: center; gap: 8px; background: var(--bg); padding: 8px 16px; border-radius: 8px; color: var(--navy); font-weight: 600; text-decoration: none;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
             +998 90 123 45 67
           </a>
-          <!-- Telegram (Conditionally displayed, demo data) -->
-          <a href="https://t.me/eshmatov" target="_blank" style="display: flex; align-items: center; gap: 8px; background: #E8F4F8; padding: 8px 16px; border-radius: 8px; color: #0088cc; font-weight: 600; text-decoration: none;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.22 3.47-.49.34-.94.5-1.35.49-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.36-.84.03-.23.34-.48.91-.74 3.56-1.55 5.94-2.58 7.14-3.08 3.39-1.41 4.1-1.65 4.56-1.66.1 0 .32.02.46.12.11.08.14.19.16.27.02.05.02.18.01.27z"/></svg>
-            @eshmatov
-          </a>
         </div>
-        
-        <!-- Bio -->
         <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 12px;">O'qituvchi haqida (Bio)</h3>
         <p style="color: var(--text-dark); line-height: 1.8; font-size: 16px; margin-bottom: 16px;">
-          Ushbu o'qituvchi uzoq yillar davomida xalq ta'limi sohasida mehnat qilib keladi. Oliy toifali mutaxassis bo'lib, hozirgacha 100 dan ortiq Respublika va xalqaro olimpiada g'oliblarini yetishtirib chiqargan. O'quvchilarda nafaqat matematik fikrlash, balki muammolarni tizimli hal etish ko'nikmalarini shakllantiradi. Maktab-internatimizda 2023-yildan buyon faoliyat olib bormoqda.
+          \${data.description || 'Ma\\'lumoti kiritilmagan.'}
         </p>
       </div>
-    </div>
-    
-    <!-- Sertifikatlar Bloki -->
-    <div style="border-top: 1px solid var(--border); padding-top: 40px;">
-      <h3 style="font-size: 24px; color: var(--navy); font-family: 'Playfair Display', serif; margin-bottom: 24px;">Sertifikatlar va Yutuqlar</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px;">
-        <!-- Sertifikat 1 -->
-        <div style="border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--white); text-align: center;">
-          <div style="width: 100%; height: 180px; background: var(--bg); border-radius: 8px; margin-bottom: 12px; display: flex; align-items:center; justify-content:center;">
-             <span style="color:var(--text-muted); font-size:14px;">Sertifikat Rasmi (Namuna)</span>
-          </div>
-          <span style="font-weight: 600; font-size: 14px; color: var(--navy);">Xalq Ta'limi a'lochisi</span>
-        </div>
-        
-        <!-- Sertifikat 2 -->
-        <div style="border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--white); text-align: center;">
-           <div style="width: 100%; height: 180px; background: var(--bg); border-radius: 8px; margin-bottom: 12px; display: flex; align-items:center; justify-content:center;">
-             <span style="color:var(--text-muted); font-size:14px;">Sertifikat Rasmi (Namuna)</span>
-          </div>
-          <span style="font-weight: 600; font-size: 14px; color: var(--navy);">Xalqaro TOFEL Level</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo-row">
-          <img src="img/logo.png" alt="Logo">
-          <span>Maktab-internati</span>
-        </div>
-        <p>Maktabgacha va maktab ta'lim vazirligi tasarrufidagi ixtisoslashtirilgan ta'lim muassasalari agentligi O'zbekiston tuman ixtisoslashtirilgan maktab-internati</p>
-      </div>
-      <div class="footer-col">
-        <h4>MUASSASA</h4>
-        <a href="index.html">Bosh sahifa</a>
-        <a href="news.html">Yangiliklar</a>
-        <a href="teachers.html">O'qituvchilar</a>
-      </div>
-      <div class="footer-col">
-        <h4>ALOQA</h4>
-        <p>Telefon: +998 90 123-45-67</p>
-        <p>Telegram: @maktab_internat</p>
-        <p>Instagram: @maktab_internat</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2023-2026 O'zbekiston tuman ixtisoslashtirilgan maktab-internati. Barcha huquqlar himoyalangan.</span>
-    </div>
-  </div>
-</footer>
-
-<script>
-const slides = document.querySelectorAll('.hero-slide');
-let cur = 0;
-setInterval(() => {
-  slides[cur].classList.remove('active');
-  cur = (cur + 1) % slides.length;
-  slides[cur].classList.add('active');
-}, 5000);
-
-function animateCounter(el, target) {
-  const dur = 1600, step = 16;
-  const inc = target / (dur / step);
-  let val = 0;
-  const t = setInterval(() => {
-    val = Math.min(val + inc, target);
-    el.textContent = Math.floor(val) + (val >= target ? '+' : '');
-    if (val >= target) { el.textContent = target + (target === 3 ? '' : '+'); clearInterval(t); }
-  }, step);
-}
-const statSection = document.getElementById('statistika');
-let counted = false;
-new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting && !counted) {
-    counted = true;
-    document.querySelectorAll('.stat-num').forEach(el => animateCounter(el, +el.dataset.target));
-  }
-}, {threshold: .3}).observe(statSection);
-
-document.querySelectorAll('.faq-item').forEach(item => {
-  item.querySelector('.faq-q').addEventListener('click', () => {
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.faq-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
-    });
-    if (!isOpen) {
-      item.classList.add('open');
-      item.querySelector('.faq-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>';
+  `;
     }
-  });
-});
-
-const track = document.getElementById('testiTrack');
-const dotsWrap = document.getElementById('testiDots');
-const cards = track.children.length;
-let tIdx = 0;
-
-function perView() { return window.innerWidth <= 900 ? 1 : 3; }
-function maxIdx() { return Math.max(0, cards - perView()); }
-
-function buildDots() {
-  dotsWrap.innerHTML = '';
-  for (let i = 0; i <= maxIdx(); i++) {
-    const d = document.createElement('button');
-    d.className = 'testi-dot' + (i === tIdx ? ' active' : '');
-    d.addEventListener('click', () => moveTo(i));
-    dotsWrap.appendChild(d);
-  }
-}
-function moveTo(n) {
-  tIdx = Math.max(0, Math.min(n, maxIdx()));
-  const cardEl = track.children[0];
-  const gap = 24;
-  const cardW = cardEl.getBoundingClientRect().width + gap;
-  track.style.transform = 'translateX(-' + (tIdx * cardW) + 'px)';
-  document.querySelectorAll('.testi-dot').forEach((d, i) => d.classList.toggle('active', i === tIdx));
-}
-document.getElementById('tNext').addEventListener('click', () => moveTo(tIdx + 1));
-document.getElementById('tPrev').addEventListener('click', () => moveTo(tIdx - 1));
-window.addEventListener('resize', () => { buildDots(); moveTo(0); });
-buildDots();
-moveTo(0);
-
-const menuBtn = document.getElementById('menuBtn');
-const mobileNav = document.getElementById('mobileNav');
-menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
-
-const currentUrl = window.location.pathname;
-document.querySelectorAll('nav a, .mobile-nav a').forEach(a => {
-  const isMatch = currentUrl.endsWith(a.getAttribute('href')) || (currentUrl.endsWith('/') && a.getAttribute('href') === 'index.html');
-  a.classList.toggle('active', isMatch);
-});
-</script>
+    loadTeacherDetail();
+  </script>
 </body>
+
 </html>
