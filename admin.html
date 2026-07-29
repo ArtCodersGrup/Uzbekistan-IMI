@@ -450,6 +450,23 @@
                     <textarea id="tDesc" class="form-control" rows="3"></textarea>
                 </div>
                 <div class="form-group">
+                    <label>Telefon raqam</label>
+                    <input type="text" id="tPhone" class="form-control" placeholder="+998 90 123 45 67">
+                </div>
+                <div class="form-group">
+                    <label>Telegram Username</label>
+                    <input type="text" id="tTelegram" class="form-control" placeholder="@username">
+                </div>
+                <div class="form-group">
+                    <label>Sertifikatlar</label>
+                    <div id="certsWrapper" style="display:flex; flex-direction:column; gap:12px; margin-bottom:8px;">
+                    </div>
+                    <button type="button" class="btn-outline"
+                        style="font-size:12px; padding:6px 12px; display:inline-block;" onclick="addCertField()">+
+                        Sertifikat qo'shish</button>
+                    <input type="hidden" id="certsToDelete" value="">
+                </div>
+                <div class="form-group">
                     <label>Rasm yuklash (Ixtiyoriy)</label>
                     <input type="file" id="tImageFile" class="form-control" accept="image/*">
                     <input type="hidden" id="tImageOld">
@@ -648,6 +665,35 @@
         }
 
         // ============================================
+        // Certificate dynamic UI logic
+        // ============================================
+        function addCertField(id = '', title = '', imgUrl = '') {
+            const div = document.createElement('div');
+            div.className = 'cert-row';
+            div.style.cssText = "display:flex; gap:8px; align-items:center; border: 1px solid var(--border); padding:8px; border-radius:8px;";
+            div.innerHTML = `
+                <input type="hidden" class="c-id" value="${id}">
+                <input type="hidden" class="c-old-img" value="${imgUrl}">
+                <div style="flex:1;">
+                    <input type="text" class="form-control c-title" placeholder="Sertifikat nomi (Ixtiyoriy)" value="${title}" style="margin-bottom:4px;">
+                    <input type="file" class="form-control c-file" accept="image/*">
+                    ${imgUrl ? '<small style="color:var(--gold);">Sertifikat rasmi allaqachon mavjud.</small>' : ''}
+                </div>
+                <button type="button" class="btn-outline" style="color:red; border-color:red;" onclick="removeCertField(this, '${id}')">-</button>
+            `;
+            document.getElementById('certsWrapper').appendChild(div);
+        }
+        function removeCertField(btn, id) {
+            if (id) {
+                const delInput = document.getElementById('certsToDelete');
+                const arr = delInput.value ? delInput.value.split(',') : [];
+                arr.push(id);
+                delInput.value = arr.join(',');
+            }
+            btn.parentElement.remove();
+        }
+
+        // ============================================
         // CRUD Logic: Teachers
         // ============================================
         async function loadTeachers() {
@@ -687,19 +733,31 @@
         function openTeacherModal() {
             document.getElementById('teacherForm').reset();
             document.getElementById('teacherId').value = '';
+            document.getElementById('certsWrapper').innerHTML = '';
+            document.getElementById('certsToDelete').value = '';
             document.getElementById('teacherModalTitle').innerText = "O'qituvchi Qo'shish";
             document.getElementById('teacherModal').classList.remove('hidden');
         }
 
         async function editTeacher(id) {
-            const { data, error } = await supabaseClient.from('teachers').select('*').eq('id', id).single();
+            const { data, error } = await supabaseClient.from('teachers').select('*, teacher_certificates(*)').eq('id', id).single();
             if (data) {
                 document.getElementById('teacherId').value = data.id;
                 document.getElementById('tName').value = data.full_name;
                 document.getElementById('tRole').value = data.role;
                 document.getElementById('tDesc').value = data.description || '';
                 document.getElementById('tImageOld').value = data.image_url || '';
-                document.getElementById('tImageFile').value = ''; // clear file input
+                document.getElementById('tImageFile').value = '';
+                document.getElementById('tPhone').value = data.phone_number || '';
+                document.getElementById('tTelegram').value = data.telegram_username || '';
+
+                document.getElementById('certsWrapper').innerHTML = '';
+                document.getElementById('certsToDelete').value = '';
+
+                if (data.teacher_certificates) {
+                    data.teacher_certificates.forEach(c => addCertField(c.id, c.title, c.image_url));
+                }
+
                 document.getElementById('teacherModalTitle').innerText = "O'qituvchini Tahrirlash";
                 document.getElementById('teacherModal').classList.remove('hidden');
             } else if (error) {
@@ -726,16 +784,55 @@
                     full_name: document.getElementById('tName').value,
                     role: document.getElementById('tRole').value,
                     description: document.getElementById('tDesc').value,
-                    image_url: imageUrl
+                    image_url: imageUrl,
+                    phone_number: document.getElementById('tPhone').value,
+                    telegram_username: document.getElementById('tTelegram').value
                 };
 
                 let submitError = null;
+                let finalTeacherId = id;
                 if (id) {
                     const { error } = await supabaseClient.from('teachers').update(payload).eq('id', id);
                     submitError = error;
                 } else {
-                    const { error } = await supabaseClient.from('teachers').insert([payload]);
+                    const { data: insData, error } = await supabaseClient.from('teachers').insert([payload]).select();
                     submitError = error;
+                    if (insData && insData.length > 0) finalTeacherId = insData[0].id;
+                }
+
+                if (submitError) throw submitError;
+
+                // Handle certificates deleting
+                const toDelete = document.getElementById('certsToDelete').value;
+                if (toDelete) {
+                    const idsToDel = toDelete.split(',').filter(x => x).map(x => parseInt(x));
+                    if (idsToDel.length > 0) await supabaseClient.from('teacher_certificates').delete().in('id', idsToDel);
+                }
+
+                // Handle certificates adding/updating
+                const certRows = document.querySelectorAll('.cert-row');
+                for (const row of certRows) {
+                    const cId = row.querySelector('.c-id').value;
+                    const cOldImg = row.querySelector('.c-old-img').value;
+                    const cTitle = row.querySelector('.c-title').value;
+                    const cFileInput = row.querySelector('.c-file');
+
+                    let cImgUrl = cOldImg;
+                    if (cFileInput.files.length > 0) {
+                        cImgUrl = await uploadImage(cFileInput.files[0]);
+                    }
+
+                    const cPayload = {
+                        teacher_id: finalTeacherId,
+                        title: cTitle,
+                        image_url: cImgUrl
+                    };
+
+                    if (cId) {
+                        await supabaseClient.from('teacher_certificates').update(cPayload).eq('id', cId);
+                    } else {
+                        await supabaseClient.from('teacher_certificates').insert([cPayload]);
+                    }
                 }
 
                 if (submitError) throw submitError;
