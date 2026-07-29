@@ -470,7 +470,7 @@
             const pVal = document.getElementById('password').value;
 
             // Demo auth as a fallback if REAL admin login doesn't exist
-            if (window.supabase) {
+            if (window.supabaseClient) {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email: eVal, password: pVal });
                 if (error) {
                     // Fallback to fake login if Supabase auth fails (user not configured yet)
@@ -493,7 +493,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (window.supabase) await supabaseClient.auth.signOut();
+            if (window.supabaseClient) await supabaseClient.auth.signOut();
             document.getElementById('dashboardView').classList.add('hidden');
             document.getElementById('loginView').classList.remove('hidden');
         });
@@ -518,12 +518,12 @@
         // CRUD Logic: News
         // ============================================
         async function loadNews() {
-            if (!window.supabase) return;
+            if (!window.supabaseClient) return;
             const { data, error } = await supabaseClient.from('news').select('*').order('id', { ascending: false });
             const tbody = document.getElementById('newsTbody');
             tbody.innerHTML = '';
             if (error || !data) {
-                tbody.innerHTML = '<tr><td colspan="4">Xatolik yuz berdi</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4">Xatolik yuz berdi: ' + (error ? error.message : '') + '</td></tr>';
                 return;
             }
             if (data.length === 0) {
@@ -554,7 +554,7 @@
         }
 
         async function editNews(id) {
-            const { data } = await supabaseClient.from('news').select('*').eq('id', id).single();
+            const { data, error } = await supabaseClient.from('news').select('*').eq('id', id).single();
             if (data) {
                 document.getElementById('newsId').value = data.id;
                 document.getElementById('newsTitle').value = data.title;
@@ -562,6 +562,8 @@
                 document.getElementById('newsImage').value = data.image_url || '';
                 document.getElementById('newsModalTitle').innerText = "Yangilikni Tahrirlash";
                 document.getElementById('newsModal').classList.remove('hidden');
+            } else if (error) {
+                alert("Xato: " + error.message);
             }
         }
 
@@ -573,10 +575,19 @@
                 content: document.getElementById('newsContent').value,
                 image_url: document.getElementById('newsImage').value
             };
+
+            let submitError = null;
             if (id) {
-                await supabaseClient.from('news').update(payload).eq('id', id);
+                const { error } = await supabaseClient.from('news').update(payload).eq('id', id);
+                submitError = error;
             } else {
-                await supabaseClient.from('news').insert([payload]);
+                const { error } = await supabaseClient.from('news').insert([payload]);
+                submitError = error;
+            }
+
+            if (submitError) {
+                alert("Saqlashda xatolik: " + submitError.message);
+                return;
             }
             closeModal('newsModal');
             loadNews();
@@ -584,7 +595,11 @@
 
         async function deleteNews(id) {
             if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-                await supabaseClient.from('news').delete().eq('id', id);
+                const { error } = await supabaseClient.from('news').delete().eq('id', id);
+                if (error) {
+                    alert("O'chirishda xatolik: " + error.message);
+                    return;
+                }
                 loadNews();
             }
         }
@@ -593,12 +608,19 @@
         // CRUD Logic: Teachers
         // ============================================
         async function loadTeachers() {
-            if (!window.supabase) return;
+            if (!window.supabaseClient) return;
             const { data, error } = await supabaseClient.from('teachers').select('*').order('id', { ascending: true });
             const tbody = document.getElementById('teachersTbody');
             tbody.innerHTML = '';
-            if (error || !data) return (tbody.innerHTML = '<tr><td colspan="3">Xato</td></tr>');
-            if (data.length === 0) return (tbody.innerHTML = '<tr><td colspan="3">O\\'qituvchilar yo\\'q</td></tr>');
+
+            if (error || !data) {
+                tbody.innerHTML = '<tr><td colspan="3">Xato: ' + (error ? error.message : '') + '</td></tr>';
+                return;
+            }
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">O\\'qituvchilar yo\\'q</td></tr>';
+                return;
+            }
 
             data.forEach(item => {
                 const tr = document.createElement('tr');
@@ -622,7 +644,7 @@
         }
 
         async function editTeacher(id) {
-            const { data } = await supabaseClient.from('teachers').select('*').eq('id', id).single();
+            const { data, error } = await supabaseClient.from('teachers').select('*').eq('id', id).single();
             if (data) {
                 document.getElementById('teacherId').value = data.id;
                 document.getElementById('tName').value = data.full_name;
@@ -631,6 +653,8 @@
                 document.getElementById('tImage').value = data.image_url || '';
                 document.getElementById('teacherModalTitle').innerText = "O'qituvchini Tahrirlash";
                 document.getElementById('teacherModal').classList.remove('hidden');
+            } else if (error) {
+                alert("Xato: " + error.message);
             }
         }
 
@@ -643,10 +667,19 @@
                 description: document.getElementById('tDesc').value,
                 image_url: document.getElementById('tImage').value
             };
+
+            let submitError = null;
             if (id) {
-                await supabaseClient.from('teachers').update(payload).eq('id', id);
+                const { error } = await supabaseClient.from('teachers').update(payload).eq('id', id);
+                submitError = error;
             } else {
-                await supabaseClient.from('teachers').insert([payload]);
+                const { error } = await supabaseClient.from('teachers').insert([payload]);
+                submitError = error;
+            }
+
+            if (submitError) {
+                alert("Saqlashda xatolik: " + submitError.message);
+                return;
             }
             closeModal('teacherModal');
             loadTeachers();
@@ -654,7 +687,11 @@
 
         async function deleteTeacher(id) {
             if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-                await supabaseClient.from('teachers').delete().eq('id', id);
+                const { error } = await supabaseClient.from('teachers').delete().eq('id', id);
+                if (error) {
+                    alert("O'chirishda xatolik: " + error.message);
+                    return;
+                }
                 loadTeachers();
             }
         }
