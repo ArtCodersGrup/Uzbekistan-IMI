@@ -89,6 +89,7 @@ async function loadSurveys() {
             <td class="action-links">
                 <a onclick="editSurvey(${item.id})">Tahrirlash</a>
                 <a onclick="viewSurveyStats(${item.id})">Natijalar</a>
+                <a onclick="toggleSurveyStatus(${item.id}, ${item.is_open})">${item.is_open ? "To'xtatish" : 'Faollashtirish'}</a>
                 <a onclick="deleteSurvey(${item.id})" class="del">O'chirish</a>
             </td>
         `;
@@ -126,6 +127,15 @@ async function editSurvey(id) {
 
     document.getElementById('surveyModalTitle').innerText = "So'rovnomani Tahrirlash";
     document.getElementById('surveyModal').classList.remove('hidden');
+}
+
+async function toggleSurveyStatus(id, currentlyOpen) {
+    const { error } = await supabaseClient.from('surveys').update({ is_open: !currentlyOpen }).eq('id', id);
+    if (error) {
+        alert("Xato: " + error.message);
+        return;
+    }
+    loadSurveys();
 }
 
 async function deleteSurvey(id) {
@@ -204,6 +214,8 @@ document.getElementById('surveyForm').addEventListener('submit', async (e) => {
     }
 });
 
+let currentStats = null;
+
 async function viewSurveyStats(surveyId) {
     const modal = document.getElementById('surveyStatsModal');
     const content = document.getElementById('surveyStatsContent');
@@ -222,12 +234,15 @@ async function viewSurveyStats(surveyId) {
     const { data: responses, error: rErr } = await supabaseClient
         .from('survey_responses')
         .select('*, survey_answers(*)')
-        .eq('survey_id', surveyId);
+        .eq('survey_id', surveyId)
+        .order('created_at', { ascending: true });
 
     if (rErr) { content.innerHTML = "Xato: " + rErr.message; return; }
 
     const questions = (surveyData.survey_questions || []).sort((a, b) => a.order_num - b.order_num);
     const totalResponses = responses.length;
+
+    currentStats = { surveyId, survey: surveyData, questions, responses };
 
     let html = `<div style="margin-bottom:24px;">Umumiy javob berganlar soni: <strong>${totalResponses}</strong></div>`;
 
@@ -293,5 +308,71 @@ async function viewSurveyStats(surveyId) {
         html += `</div>`;
     });
 
+    html += `<div style="margin-top:32px;">`;
+    html += `<h4 style="margin-bottom:12px; color:var(--navy);">Barcha yuborilgan javoblar</h4>`;
+    html += `<table style="width:100%; border-collapse:collapse; font-size:13px;">`;
+    html += `<thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid var(--border);">Ism</th><th style="text-align:left; padding:6px; border-bottom:1px solid var(--border);">Sana</th><th style="padding:6px; border-bottom:1px solid var(--border);">Amal</th></tr></thead><tbody>`;
+    responses.forEach(r => {
+        const name = (r.responder_name && r.responder_name.trim()) ? r.responder_name : 'Anonim';
+        const date = r.created_at ? new Date(r.created_at).toLocaleString('uz-UZ') : '';
+        html += `<tr>
+            <td style="padding:6px; border-bottom:1px solid var(--border);">${name}</td>
+            <td style="padding:6px; border-bottom:1px solid var(--border);">${date}</td>
+            <td style="padding:6px; border-bottom:1px solid var(--border); text-align:center;"><a class="del" style="cursor:pointer;" onclick="deleteSurveyResponse(${r.id}, ${surveyId})">O'chirish</a></td>
+        </tr>`;
+    });
+    html += `</tbody></table></div>`;
+
     content.innerHTML = html;
+}
+
+async function deleteSurveyResponse(responseId, surveyId) {
+    if (!confirm("Ushbu javobni butunlay o'chirmoqchimisiz?")) return;
+    const { error } = await supabaseClient.from('survey_responses').delete().eq('id', responseId);
+    if (error) {
+        alert("O'chirishda xatolik: " + error.message);
+        return;
+    }
+    viewSurveyStats(surveyId);
+}
+
+function exportSurveyResults() {
+    if (!currentStats) return;
+    const { survey, questions, responses } = currentStats;
+
+    const header = ['Ism', 'Sana', ...questions.map(q => q.question_text)];
+    const rows = [header];
+
+    responses.forEach(r => {
+        const name = (r.responder_name && r.responder_name.trim()) ? r.responder_name : 'Anonim';
+        const date = r.created_at ? new Date(r.created_at).toLocaleString('uz-UZ') : '';
+        const row = [name, date];
+        questions.forEach(q => {
+            const answer = (r.survey_answers || []).find(a => a.question_id === q.id);
+            if (!answer) { row.push(''); return; }
+            if (q.question_type === 'choice') {
+                const opt = (q.survey_options || []).find(o => o.id === answer.option_id);
+                row.push(opt ? opt.option_text : '');
+            } else {
+                row.push(answer.answer_text || '');
+            }
+        });
+        rows.push(row);
+    });
+
+    const csv = rows.map(row => row.map(cell => {
+        const val = String(cell ?? '').replace(/"/g, '""');
+        return `"${val}"`;
+    }).join(',')).join('\r\n');
+
+    const bom = String.fromCharCode(0xFEFF);
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${survey.title.replace(/[^\p{L}\p{N}_\-]+/gu, '_')}_natijalar.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
 }

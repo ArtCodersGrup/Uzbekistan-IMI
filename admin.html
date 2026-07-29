@@ -548,7 +548,10 @@
         <div class="modal" style="max-width:800px; max-height:90vh; overflow-y:auto;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 id="surveyStatsTitle">Statistika</h3>
-                <button type="button" class="btn-outline" onclick="closeModal('surveyStatsModal')">Yopish</button>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn-outline" onclick="exportSurveyResults()">Excelga yuklab olish</button>
+                    <button type="button" class="btn-outline" onclick="closeModal('surveyStatsModal')">Yopish</button>
+                </div>
             </div>
             <div id="surveyStatsContent">Yuklanmoqda...</div>
         </div>
