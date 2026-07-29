@@ -1,12 +1,13 @@
 import psycopg2
+from db_config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 
 try:
     conn = psycopg2.connect(
-        host="aws-1-ap-northeast-2.pooler.supabase.com",
-        port=5432,
-        dbname="postgres",
-        user="postgres.obswrerbtrznxhcvridd",
-        password="R9Q9jGLeXj24foc7"
+        host=DB_HOST,
+        port=DB_PORT,
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD
     )
     conn.autocommit = True
     cur = conn.cursor()

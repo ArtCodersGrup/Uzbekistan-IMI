@@ -1131,78 +1131,6 @@
   </footer>
 
   <script>
-    const slides = document.querySelectorAll('.hero-slide');
-    let cur = 0;
-    setInterval(() => {
-      slides[cur].classList.remove('active');
-      cur = (cur + 1) % slides.length;
-      slides[cur].classList.add('active');
-    }, 5000);
-
-    function animateCounter(el, target) {
-      const dur = 1600, step = 16;
-      const inc = target / (dur / step);
-      let val = 0;
-      const t = setInterval(() => {
-        val = Math.min(val + inc, target);
-        el.textContent = Math.floor(val) + (val >= target ? '+' : '');
-        if (val >= target) { el.textContent = target + (target === 3 ? '' : '+'); clearInterval(t); }
-      }, step);
-    }
-    const statSection = document.getElementById('statistika');
-    let counted = false;
-    new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && !counted) {
-        counted = true;
-        document.querySelectorAll('.stat-num').forEach(el => animateCounter(el, +el.dataset.target));
-      }
-    }, { threshold: .3 }).observe(statSection);
-
-    document.querySelectorAll('.faq-item').forEach(item => {
-      item.querySelector('.faq-q').addEventListener('click', () => {
-        const isOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(i => {
-          i.classList.remove('open');
-          i.querySelector('.faq-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
-        });
-        if (!isOpen) {
-          item.classList.add('open');
-          item.querySelector('.faq-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>';
-        }
-      });
-    });
-
-    const track = document.getElementById('testiTrack');
-    const dotsWrap = document.getElementById('testiDots');
-    const cards = track.children.length;
-    let tIdx = 0;
-
-    function perView() { return window.innerWidth <= 900 ? 1 : 3; }
-    function maxIdx() { return Math.max(0, cards - perView()); }
-
-    function buildDots() {
-      dotsWrap.innerHTML = '';
-      for (let i = 0; i <= maxIdx(); i++) {
-        const d = document.createElement('button');
-        d.className = 'testi-dot' + (i === tIdx ? ' active' : '');
-        d.addEventListener('click', () => moveTo(i));
-        dotsWrap.appendChild(d);
-      }
-    }
-    function moveTo(n) {
-      tIdx = Math.max(0, Math.min(n, maxIdx()));
-      const cardEl = track.children[0];
-      const gap = 24;
-      const cardW = cardEl.getBoundingClientRect().width + gap;
-      track.style.transform = 'translateX(-' + (tIdx * cardW) + 'px)';
-      document.querySelectorAll('.testi-dot').forEach((d, i) => d.classList.toggle('active', i === tIdx));
-    }
-    document.getElementById('tNext').addEventListener('click', () => moveTo(tIdx + 1));
-    document.getElementById('tPrev').addEventListener('click', () => moveTo(tIdx - 1));
-    window.addEventListener('resize', () => { buildDots(); moveTo(0); });
-    buildDots();
-    moveTo(0);
-
     const menuBtn = document.getElementById('menuBtn');
     const mobileNav = document.getElementById('mobileNav');
     menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
@@ -1221,7 +1149,7 @@
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
       const container = document.getElementById('teacherDetailContainer');
-      if (!id || !window.supabase) {
+      if (!id || !window.supabaseClient) {
         container.innerHTML = '<div style="padding:40px; text-align:center;">Ustoz topilmadi.</div>';
         return;
       }

@@ -565,26 +565,17 @@
             const eVal = document.getElementById('email').value;
             const pVal = document.getElementById('password').value;
 
-            // Demo auth as a fallback if REAL admin login doesn't exist
             if (window.supabaseClient) {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email: eVal, password: pVal });
                 if (error) {
-                    // Fallback to fake login if Supabase auth fails (user not configured yet)
-                    if (eVal.includes('@') && pVal === 'admin') {
-                        showDashboard();
-                    } else {
-                        document.getElementById('errorMsg').style.display = 'block';
-                        document.getElementById('errorMsg').innerText = "Ruxsat etilmadi: " + error.message + " | Iltimos 'admin@maktab.uz' va 'admin' ulanishi bilan kiring.";
-                    }
+                    document.getElementById('errorMsg').style.display = 'block';
+                    document.getElementById('errorMsg').innerText = "Ruxsat etilmadi: " + error.message;
                 } else {
                     showDashboard();
                 }
             } else {
-                if (eVal.includes('@') && pVal === 'admin') {
-                    showDashboard();
-                } else {
-                    document.getElementById('errorMsg').style.display = 'block';
-                }
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('errorMsg').innerText = "Supabase ulanishi mavjud emas.";
             }
         });
 
@@ -645,7 +636,7 @@
                 return;
             }
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">Yangiliklar yo\'q</td ></tr > ';
+                tbody.innerHTML = '<tr><td colspan="4">Yangiliklar yo\'q</td></tr>';
                 return;
             }
 
