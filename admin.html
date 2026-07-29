@@ -390,6 +390,8 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
                 <!-- SURVEYS TAB -->
                 <div id="surveysTab" class="hidden">
                     <div class="dash-title">
@@ -406,7 +408,9 @@
                             </tr>
                         </thead>
                         <tbody id="surveysTbody">
-                            <tr><td colspan="4">Yuklanmoqda...</td></tr>
+                            <tr>
+                                <td colspan="4">Yuklanmoqda...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -523,11 +527,13 @@
                         <input type="checkbox" id="surveyOpen" checked> Faol (Ochiq)
                     </label>
                 </div>
-                
-                <h4 style="margin:16px 0 8px 0; border-bottom:1px solid var(--border); padding-bottom:8px;">Savollar</h4>
+
+                <h4 style="margin:16px 0 8px 0; border-bottom:1px solid var(--border); padding-bottom:8px;">Savollar
+                </h4>
                 <div id="surveyQuestionsBox" style="display:flex; flex-direction:column; gap:16px; margin-bottom:16px;">
                 </div>
-                <button type="button" class="btn-outline" style="font-size:12px; padding:6px 12px;" onclick="addSurveyQuestion()">+ Savol qo'shish</button>
+                <button type="button" class="btn-outline" style="font-size:12px; padding:6px 12px;"
+                    onclick="addSurveyQuestion()">+ Savol qo'shish</button>
 
                 <div class="modal-actions">
                     <button type="button" class="btn-outline" onclick="closeModal('surveyModal')">Bekor qilish</button>
@@ -593,7 +599,7 @@
             document.getElementById('dashboardView').classList.remove('hidden');
             loadNews();
             loadTeachers();
-            if(typeof loadSurveys === 'function') loadSurveys();
+            if (typeof loadSurveys === 'function') loadSurveys();
         }
 
         function showTab(id) {
@@ -908,7 +914,7 @@
 
                 closeModal('teacherModal');
                 loadTeachers();
-            if(typeof loadSurveys === 'function') loadSurveys();
+                if (typeof loadSurveys === 'function') loadSurveys();
             } catch (err) {
                 alert(err.message);
             } finally {
@@ -925,7 +931,7 @@
                     return;
                 }
                 loadTeachers();
-            if(typeof loadSurveys === 'function') loadSurveys();
+                if (typeof loadSurveys === 'function') loadSurveys();
             }
         }
 
