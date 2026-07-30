@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So'rovnoma natijalari - Admin Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --navy: #1b3a6b;
+            --navy-dark: #0f254b;
+            --gold: #c9a84c;
+            --bg: #f4f6f9;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background: var(--bg);
+            line-height: 1.6;
+        }
+
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+        }
+
+        .topbar a {
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .survey-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .survey-status {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .status-open {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .status-closed {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+
+        .card h4 {
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .btn-outline:hover {
+            background: var(--bg);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--bg);
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .del-link {
+            color: #ef4444;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .q-block {
+            margin-bottom: 24px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .opt-row {
+            margin-bottom: 8px;
+        }
+
+        .opt-row .opt-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .opt-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .opt-bar-fill {
+            height: 100%;
+            background: var(--gold);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a href="admin.html">&larr; Boshqaruv panelga qaytish</a>
+    </div>
+    <div class="wrap">
+        <div id="content" class="card">Yuklanmoqda...</div>
+    </div>
+
+    <script>
+        let pageState = null;
+
+        function getSurveyId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        async function requireAuth() {
+            if (!window.supabaseClient) return false;
+            const { data } = await supabaseClient.auth.getSession();
+            return !!(data && data.session);
+        }
+
+        async function loadResults() {
+            const content = document.getElementById('content');
+            const surveyId = getSurveyId();
+            if (!surveyId) {
+                content.innerHTML = "So'rovnoma ID topilmadi.";
+                return;
+            }
+
+            const authed = await requireAuth();
+            if (!authed) {
+                content.innerHTML = `
+                    <div style="text-align:center; padding:40px 0;">
+                        <p style="margin-bottom:16px; color:var(--text-muted);">Bu sahifa faqat tizimga kirgan administratorlar uchun.</p>
+                        <a href="admin.html" class="btn-outline" style="text-decoration:none; display:inline-block;">Admin panelga kirish</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const { data: survey, error: sErr } = await supabaseClient
+                .from('surveys')
+                .select('*, survey_questions(*, survey_options(*))')
+                .eq('id', surveyId)
+                .single();
+            if (sErr || !survey) {
+                content.innerHTML = "Xato: " + (sErr ? sErr.message : "so'rovnoma topilmadi");
+                return;
+            }
+
+            const { data: responses, error: rErr } = await supabaseClient
+                .from('survey_responses')
+                .select('*, survey_answers(*)')
+                .eq('survey_id', surveyId)
+                .order('created_at', { ascending: true });
+            if (rErr) {
+                content.innerHTML = "Xato: " + rErr.message;
+                return;
+            }
+
+            const questions = (survey.survey_questions || []).sort((a, b) => a.order_num - b.order_num);
+            pageState = { surveyId, survey, questions, responses };
+
+            document.title = survey.title + " - Natijalar";
+            render();
+        }
+
+        function answerFor(response, questionId) {
+            return (response.survey_answers || []).find(a => a.question_id === questionId);
+        }
+
+        function answerText(question, response) {
+            const a = answerFor(response, question.id);
+            if (!a) return '';
+            if (question.question_type === 'choice') {
+                const opt = (question.survey_options || []).find(o => o.id === a.option_id);
+                return opt ? opt.option_text : '';
+            }
+            return a.answer_text || '';
+        }
+
+        function render() {
+            const { survey, questions, responses } = pageState;
+            const content = document.getElementById('content');
+
+            let html = `
+                <div class="survey-title">${survey.title}</div>
+                <span class="survey-status ${survey.is_open ? 'status-open' : 'status-closed'}">${survey.is_open ? 'Faol' : 'Yakunlangan'}</span>
+                <p style="color:var(--text-muted); margin-bottom:16px;">${survey.description || ''}</p>
+                <div style="margin-bottom:24px;">Umumiy javob berganlar soni: <strong>${responses.length}</strong></div>
+            `;
+
+            if (responses.length === 0) {
+                html += `<div>Hech kim qatnashmagan.</div>`;
+                content.innerHTML = html;
+                return;
+            }
+
+            html += `<div class="actions-row">
+                <button type="button" class="btn-outline" onclick="exportSurveyResults()">Excelga yuklab olish</button>
+            </div>`;
+
+            // 1. Aggregated stats per question
+            html += `<h4>Umumiy statistika</h4>`;
+            questions.forEach(q => {
+                html += `<div class="q-block"><h4 style="margin-bottom:12px;">${q.question_text}</h4>`;
+                const qAnswers = responses.map(r => answerFor(r, q.id)).filter(Boolean);
+
+                if (q.question_type === 'choice') {
+                    const counts = {};
+                    let answeredCount = 0;
+                    (q.survey_options || []).forEach(opt => counts[opt.id] = { text: opt.option_text, count: 0 });
+                    qAnswers.forEach(a => {
+                        if (a.option_id && counts[a.option_id]) {
+                            counts[a.option_id].count++;
+                            answeredCount++;
+                        }
+                    });
+                    for (const key in counts) {
+                        const opt = counts[key];
+                        const pct = answeredCount > 0 ? ((opt.count / answeredCount) * 100).toFixed(1) : 0;
+                        html += `
+                            <div class="opt-row">
+                                <div class="opt-line"><span>${opt.text}</span><span>${pct}% (${opt.count})</span></div>
+                                <div class="opt-bar-bg"><div class="opt-bar-fill" style="width:${pct}%;"></div></div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    const texts = qAnswers.filter(a => a.answer_text && a.answer_text.trim());
+                    if (texts.length === 0) {
+                        html += `<div style="color:var(--text-muted); font-size:14px;">Javoblar yo'q</div>`;
+                    } else {
+                        html += `<ul style="list-style-type:disc; padding-left:20px; font-size:14px;">`;
+                        texts.forEach(a => html += `<li style="margin-bottom:4px;">${a.answer_text}</li>`);
+                        html += `</ul>`;
+                    }
+                }
+                html += `</div>`;
+            });
+
+            // 2. Per-respondent list
+            html += `<h4 style="margin-top:8px;">Ovoz bergan foydalanuvchilar ro'yxati</h4>`;
+            html += `<div style="overflow-x:auto;"><table class="data-table"><thead><tr>`;
+            html += `<th>№</th><th>Ism</th><th>Sana</th>`;
+            questions.forEach(q => html += `<th>${q.question_text}</th>`);
+            html += `<th>Amal</th></tr></thead><tbody>`;
+
+            responses.forEach((r, idx) => {
+                const name = (r.responder_name && r.responder_name.trim()) ? r.responder_name : 'Anonim';
+                const date = r.created_at ? new Date(r.created_at).toLocaleString('uz-UZ') : '';
+                html += `<tr><td>${idx + 1}</td><td>${name}</td><td>${date}</td>`;
+                questions.forEach(q => html += `<td>${answerText(q, r)}</td>`);
+                html += `<td><a class="del-link" onclick="deleteResponse(${r.id})">O'chirish</a></td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+
+            content.innerHTML = html;
+        }
+
+        async function deleteResponse(responseId) {
+            if (!confirm("Ushbu foydalanuvchining javobini butunlay o'chirmoqchimisiz?")) return;
+            const { error } = await supabaseClient.from('survey_responses').delete().eq('id', responseId);
+            if (error) {
+                alert("O'chirishda xatolik: " + error.message);
+                return;
+            }
+            loadResults();
+        }
+
+        function exportSurveyResults() {
+            if (!pageState) return;
+            const { survey, questions, responses } = pageState;
+
+            const header = ['№', 'Ism', 'Sana', ...questions.map(q => q.question_text)];
+            const rows = [header];
+
+            responses.forEach((r, idx) => {
+                const name = (r.responder_name && r.responder_name.trim()) ? r.responder_name : 'Anonim';
+                const date = r.created_at ? new Date(r.created_at).toLocaleString('uz-UZ') : '';
+                const row = [idx + 1, name, date];
+                questions.forEach(q => row.push(answerText(q, r)));
+                rows.push(row);
+            });
+
+            const csv = rows.map(row => row.map(cell => {
+                const val = String(cell ?? '').replace(/"/g, '""');
+                return `"${val}"`;
+            }).join(',')).join('\r\n');
+
+            const bom = String.fromCharCode(0xFEFF);
+            const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${survey.title.replace(/[^\p{L}\p{N}_\-]+/gu, '_')}_natijalar.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        loadResults();
+    </script>
+</body>
+
+</html>
